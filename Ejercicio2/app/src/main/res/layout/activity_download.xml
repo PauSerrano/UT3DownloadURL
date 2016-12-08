@@ -13,13 +13,11 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         app:srcCompat="@android:color/darker_gray"
-        android:layout_below="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
         android:layout_marginTop="60dp"
         android:id="@+id/imageView"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_height="wrap_content" />
 
     <Button
         android:text="Descargar"
@@ -27,7 +25,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/button"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:onClick="descargarImagen" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -40,12 +39,53 @@
         android:layout_alignParentStart="true"
         android:text="http://lorempixel.com/200/300/" />
 
+
+    <TextView
+        android:text="Info archivo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvComprobar"
+        android:layout_below="@+id/tvConexion"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="14dp" />
+
     <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:max="100"
+        android:visibility="visible"
+
+        android:layout_below="@+id/tvComprobar"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="52dp" />
+
+    <TextView
+        android:text="0 %"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvProgreso"
+        android:layout_below="@+id/progressBar"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:text="Tipo Conexion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvConexion"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Cambiar url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button"
+        android:layout_alignParentStart="true"
+        android:id="@+id/button2"
+        android:onClick="dialogoCambiar" />
 
 </RelativeLayout>

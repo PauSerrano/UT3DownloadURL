@@ -17,4 +17,7 @@
         </activity>
     </application>
 
+    <!--Añadimos permisos para poder acceder a la red desde nuestra app -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>

@@ -15,7 +15,8 @@ public class DemoDownloadURL {
         File file = new File (nombre);
 		
 		// 1. pedimos una URL por línea de comandos
-		String urlStringPrueba = "http://www.fpmislata.com/joomla/images/cipfpmislata/logo.jpg";
+		//String urlStringPrueba = "http://www.fpmislata.com/joomla/images/cipfpmislata/logo.jpg";
+		String urlStringPrueba = "http://lorempixel.com/200/300/";
 				
 		
 		try {
