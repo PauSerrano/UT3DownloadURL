@@ -32,7 +32,7 @@ public class DownloadActivity extends AppCompatActivity {
     private String urlDescarga;
 
     private TextView tvComprobar;
-
+    private TextView tvProgreso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,8 @@ public class DownloadActivity extends AppCompatActivity {
 
         tvConexion = (TextView) findViewById(R.id.tvConexion);
         ivImagen = (ImageView) findViewById(R.id.imageView);
-
+        tvComprobar= (TextView) findViewById(R.id.tvComprobar);
+        tvProgreso = (TextView) findViewById(R.id.tvProgreso);
 
         botonDescargar = (Button) findViewById(R.id.button);
         urlImagen = (TextView) findViewById(R.id.textURL);
@@ -51,8 +52,11 @@ public class DownloadActivity extends AppCompatActivity {
     //Metodo onClick del boton de descarga
     public void descargarImagen(View view) {
 
+        tvComprobar.setText("");
+        tvProgreso.setText("Conectando...");
+
         urlDescarga = urlImagen.getText().toString();
-        //urlDescarga = "http://www.fpmislata.com/joomla/images/cipfpmislata/logo.jpg";
+//        urlDescarga = "http://www.fpmislata.com/joomla/images/cipfpmislata/logo.jpg";
 
 
         //Comprobamos si estamos conectado a la red

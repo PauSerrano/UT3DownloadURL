@@ -63,8 +63,16 @@ public class DownloadURLTask extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        barraProgreso.setProgress(values[0]);
-        tvProgreso.setText(String.valueOf(values[0]) + " %");
+        if (tamañoRecurso!=-1){
+            barraProgreso.setProgress(values[0]);
+            tvProgreso.setText(String.valueOf(values[0]) + " %");
+        } else {
+            barraProgreso.setIndeterminate(true);
+            barraProgreso.setProgress(values[0]);
+        }
+
+        /*barraProgreso.setProgress(values[0]);
+        tvProgreso.setText(String.valueOf(values[0]) + " %");*/
 
     }
 
@@ -109,10 +117,17 @@ public class DownloadURLTask extends AsyncTask<String, Integer, Bitmap> {
 
                     //porcentaje y progress bar
                     total += n;
-                    int porc = (total*100)/ tamañoRecurso;
-                    SystemClock.sleep(50);
+                    if (tamañoRecurso !=-1) {
 
-                    publishProgress(porc);
+                        int porc = (total * 100) / tamañoRecurso;
+                        SystemClock.sleep(50);
+                        publishProgress(porc);
+                    } else {
+                        int porc = total;
+                        SystemClock.sleep(500);
+                        publishProgress(porc);
+
+                    }
                 }
 
                 //cerramos los Streams
@@ -141,6 +156,10 @@ public class DownloadURLTask extends AsyncTask<String, Integer, Bitmap> {
 
         imageView.setImageBitmap(result);
 
+        if (tamañoRecurso == -1){
+        barraProgreso.setIndeterminate(false);
+
+        }
         barraProgreso.setProgress(0);
         tvProgreso.setText( "Completado");
 
