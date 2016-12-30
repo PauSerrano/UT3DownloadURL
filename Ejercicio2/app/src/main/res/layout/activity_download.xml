@@ -88,4 +88,13 @@
         android:id="@+id/button2"
         android:onClick="dialogoCambiar" />
 
+    <Button
+        android:text="Cancelar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/butCancelar"
+        android:onClick="cancelarTarea" />
+
 </RelativeLayout>

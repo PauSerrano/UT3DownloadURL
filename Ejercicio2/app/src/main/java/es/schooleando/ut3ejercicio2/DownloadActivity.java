@@ -27,12 +27,15 @@ public class DownloadActivity extends AppCompatActivity {
 
 
     private Button botonDescargar;
+    private Button botonCancelar;
     private TextView urlImagen;
 
     private String urlDescarga;
 
     private TextView tvComprobar;
     private TextView tvProgreso;
+
+    private DownloadURLTask descargarImagenTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,11 @@ public class DownloadActivity extends AppCompatActivity {
         tvProgreso = (TextView) findViewById(R.id.tvProgreso);
 
         botonDescargar = (Button) findViewById(R.id.button);
+        botonCancelar = (Button) findViewById(R.id.butCancelar);
+
         urlImagen = (TextView) findViewById(R.id.textURL);
+
+        botonCancelar.setVisibility(View.INVISIBLE);
     }
 
     //Metodo onClick del boton de descarga
@@ -62,13 +69,22 @@ public class DownloadActivity extends AppCompatActivity {
         //Comprobamos si estamos conectado a la red
         if (estaConectado()){
             //Realizamos laoperacion de descarga en un AsynTask si estamos conectados
-            DownloadURLTask descargarImagenTask = new DownloadURLTask(this);
+            descargarImagenTask = new DownloadURLTask(this);
             descargarImagenTask.execute(urlDescarga);
         } else {
             //Indicamos que no podemos realizar la descarga
             tvComprobar.setText("No podemos descargar la imagen");
         }
     }
+
+
+    //Metodo para cancelar tarea
+    public void cancelarTarea(View view) {
+
+        descargarImagenTask.cancel(true);
+    }
+
+
 
     //Metodo para comprobar la conexion
     protected Boolean estaConectado(){

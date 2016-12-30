@@ -1,17 +1,22 @@
 package es.schooleando.ut3ejercicio2;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,12 +27,18 @@ import java.net.URL;
 
 public class DownloadURLTask extends AsyncTask<String, Integer, Bitmap> {
 
+    //*****Creamos una referencia floja para ayudar al recolector de basura a eliminar las actividades que no estén en uso
+    WeakReference<Activity> activityWeakReference;
 
     private Activity actividad;
+    //private Context contexto;
 
     private ProgressBar barraProgreso;
     private TextView tvProgreso;
     private ImageView imageView;
+
+    private Button botonCancelar;
+
 
 
     //++++++++++++++ variables para los campos de comprobacion
@@ -43,8 +54,12 @@ public class DownloadURLTask extends AsyncTask<String, Integer, Bitmap> {
 
     //Realizamos un ******* CONSTRUCTOR ******* de la clase donde le pasamos la activity para así poser referenciar los controles
     public DownloadURLTask(Activity actividad) {
-        this.actividad = actividad;
+        this.actividad=actividad;
+        //damos valor al WeakReference con la actividad que pasamos desde el hilo principal
+        activityWeakReference = new WeakReference<>(actividad);
 
+    /*public DownloadURLTask(Context context){
+        this.contexto = context;*/
         //Referenciamos los controles que vamos a utilizar de la Activity
         tvComprobar = (TextView) actividad.findViewById(R.id.tvComprobar);
         imageView = (ImageView) actividad.findViewById(R.id.imageView);
@@ -52,6 +67,10 @@ public class DownloadURLTask extends AsyncTask<String, Integer, Bitmap> {
 
     @Override
     protected void onPreExecute() {
+
+        //
+        botonCancelar = (Button) actividad.findViewById(R.id.butCancelar);
+        botonCancelar.setVisibility(View.VISIBLE);
 
         //Declaramos la barra de progreso
         barraProgreso = (ProgressBar) actividad.findViewById(R.id.progressBar);
@@ -63,16 +82,24 @@ public class DownloadURLTask extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        if (tamañoRecurso!=-1){
-            barraProgreso.setProgress(values[0]);
-            tvProgreso.setText(String.valueOf(values[0]) + " %");
+
+        //Comprovamos que la actividad existe, si no devolverá null
+        Activity activity = activityWeakReference.get();
+
+        if (activity!=null){
+
+            if (tamañoRecurso!=-1){
+                barraProgreso.setProgress(values[0]);
+                tvProgreso.setText(String.valueOf(values[0]) + " %");
+            } else {
+                barraProgreso.setIndeterminate(true);
+                barraProgreso.setProgress(values[0]);
+            }
         } else {
-            barraProgreso.setIndeterminate(true);
-            barraProgreso.setProgress(values[0]);
+            //Si devulve null cancelamos el Asyntasck
+            DownloadURLTask.this.cancel(true);
         }
 
-        /*barraProgreso.setProgress(values[0]);
-        tvProgreso.setText(String.valueOf(values[0]) + " %");*/
 
     }
 
@@ -128,6 +155,10 @@ public class DownloadURLTask extends AsyncTask<String, Integer, Bitmap> {
                         publishProgress(porc);
 
                     }
+        //++++++++++ comprovamos si la tarea está cancelada +++++++++++++
+                    //si lo esta, salimos del hilo
+                    if(isCancelled())
+                        break;
                 }
 
                 //cerramos los Streams
@@ -162,27 +193,21 @@ public class DownloadURLTask extends AsyncTask<String, Integer, Bitmap> {
         }
         barraProgreso.setProgress(0);
         tvProgreso.setText( "Completado");
+        botonCancelar.setVisibility(View.INVISIBLE);
 
 
     }
 
+    //Si salta el true en isCancelled no se ejecutará el onPostExecute y se ejecutará el on Cancelled
+    @Override
+    protected void onCancelled() {
 
+        Toast.makeText(actividad, "Tarea cancelada", Toast.LENGTH_LONG).show();
+        if (tamañoRecurso == -1){
+            barraProgreso.setIndeterminate(false);
 
-    /*private Bitmap descarcarImagen (String direccionImagen){
-        URL imagenURL = null;
-        Bitmap imagenBmp = null;
-
-        try {
-            imagenURL = new URL (direccionImagen);
-            HttpURLConnection conexion = (HttpURLConnection) imagenURL.openConnection();
-            conexion.connect();
-            imagenBmp = BitmapFactory.decodeStream(conexion.getInputStream());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
-        return imagenBmp;
-    }*/
+        barraProgreso.setProgress(0);
+        tvProgreso.setText( "Cancelado");
+    }
 }
